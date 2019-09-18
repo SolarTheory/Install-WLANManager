@@ -41,7 +41,7 @@ $Global:Win8orGreater = [Environment]::OSVersion.Version -ge (new-object 'Versio
 function Disable-WLANAdapters
 {
     ## Get only WLAN Adapters - possibly needs to be changed depending on environment
-    $WLANAdapters = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object {($_.Description -notlike “*VirtualBox*”) -and ($_.Description -notlike “*VMware*”) -and ($_.Description -like “*Wireless*”) -or ($_.Description -like “*Wi-Fi*”)}
+    $WLANAdapters = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object {($_.Description -notlike "*VirtualBox*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
     foreach ($WLANAdapter in $WLANAdapters)
         {
             ## Disable WLAN Adapter
@@ -56,7 +56,7 @@ function Disable-WLANAdapters
 function Enable-WLANAdapters
 {
     ## Get only WLAN Adapter
-    $WLANAdapters = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object {($_.Description -notlike “*VirtualBox*”) -and ($_.Description -notlike “*VMware*”) -and ($_.Description -like “*Wireless*”) -or ($_.Description -like “*Wi-Fi*”)}
+    $WLANAdapters = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object {($_.Description -notlike "*VirtualBox*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
     foreach ($WLANAdapter in $WLANAdapters)
         {
             ## Disable WLAN Adapter
@@ -70,7 +70,7 @@ function Enable-WLANAdapters
 function Test-WiredConnection
 {
 ## Get only wired connections with IP-address
-$NetworkConnectionsLAN = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter “IPEnabled=TRUE” | Where-Object {($_.Description -notlike “*VirtualBox*”) -and ($_.Description -notlike “*VMware*”) -and ($_.Description -notlike “*Wireless*”) -and ($_.Description -notlike “*Wi-Fi*”)}
+$NetworkConnectionsLAN = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter "IPEnabled=TRUE" | Where-Object {($_.Description -notlike "*VirtualBox*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*Wireless*") -and ($_.Description -notlike "*Wi-Fi*")}
 
 If ($NetworkConnectionsLAN -eq $null)
     {
@@ -90,7 +90,7 @@ ElseIf ($NetworkConnectionsLAN -ne $null)
 function Test-WirelessConnection
 {
 ## Get only wireless connections with IP-address
-$NetworkConnectionsWLAN = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter “IPEnabled=TRUE” | Where-Object {($_.Description -notlike “*VirtualBox*”) -and ($_.Description -notlike “*VMware*”) -or ($_.Description -like “*Wireless*”) -or ($_.Description -like “*Wi-Fi*”)}
+$NetworkConnectionsWLAN = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter "IPEnabled=TRUE" | Where-Object {($_.Description -notlike "*VirtualBox*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -notlike "*VMware*") -or ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
 
 If ($NetworkConnectionsWLAN -eq $null)
     {
@@ -218,7 +218,7 @@ Write-Output "VersionRegPath: $VersionRegPath"
                     #$Trigger = New-ScheduledTaskTrigger -AtStartup
                     $Action = New-ScheduledTaskAction -Execute "$env:windir\System32\WindowsPowerShell\v1.0\PowerShell.exe" -Argument "-WindowStyle Hidden -NonInteractive -Executionpolicy Unrestricted -Command ""& """"$DestinationPath\WLANManager.ps1"""""" -ReleaseDHCPLease:`$$ReleaseDHCPLease -BalloonTip:`$$BalloonTip"""
                     $Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Hidden
-                    Register-ScheduledTask -TaskName "$TaskName" -Trigger $Trigger -User $User –Action $Action -Settings $Settings -RunLevel Highest | Out-Null
+                    Register-ScheduledTask -TaskName "$TaskName" -Trigger $Trigger -User $User -Action $Action -Settings $Settings -RunLevel Highest | Out-Null
                     Start-ScheduledTask -TaskName "$TaskName"
                     Write-Output "Done"
                     } #end catch
@@ -243,7 +243,7 @@ Write-Output "VersionRegPath: $VersionRegPath"
                     Write-Output "Installed"
 
         }#End else win8 or greater
-
+}
 
 ## Function: Remove-WLANManager
 
@@ -584,7 +584,7 @@ Else
 function Remove-DHCPLease
 {
     #Get only WLAN Adapter
-    $WLANAdapterConfiguration = Get-WmiObject -Class Win32_NetworkAdapterConfiguration | Where-Object {($_.Description -notlike “*VMware*”) -and ($_.Description -like “*Wireless*”) -or ($_.Description -like "*WiFi*") -or ($_.Description -like "*Wi-Fi*")}
+    $WLANAdapterConfiguration = Get-WmiObject -Class Win32_NetworkAdapterConfiguration | Where-Object {($_.Description -notlike "*VMware*") -and ($_.Description -like "*Wireless*") -or ($_.Description -like "*WiFi*") -or ($_.Description -like "*Wi-Fi*")}
     #Release DHCP lease
     $WLANAdapterConfiguration.ReleaseDHCPLease() | Out-Null
 }
