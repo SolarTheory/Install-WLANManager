@@ -41,7 +41,7 @@ $Global:Win8orGreater = [Environment]::OSVersion.Version -ge (new-object 'Versio
 function Disable-WLANAdapters
 {
     ## Get only WLAN Adapters - possibly needs to be changed depending on environment
-    $WLANAdapters = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object {($_.Description -notlike "*VirtualBox*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
+    $WLANAdapters = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object {($_.Description -notlike "*Virtual*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
     foreach ($WLANAdapter in $WLANAdapters)
         {
             ## Disable WLAN Adapter
@@ -56,7 +56,7 @@ function Disable-WLANAdapters
 function Enable-WLANAdapters
 {
     ## Get only WLAN Adapter
-    $WLANAdapters = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object {($_.Description -notlike "*VirtualBox*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
+    $WLANAdapters = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object {($_.Description -notlike "*Virtual*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*VPN*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
     foreach ($WLANAdapter in $WLANAdapters)
         {
             ## Disable WLAN Adapter
@@ -70,7 +70,7 @@ function Enable-WLANAdapters
 function Test-WiredConnection
 {
 ## Get only wired connections with IP-address
-$NetworkConnectionsLAN = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter "IPEnabled=TRUE" | Where-Object {($_.Description -notlike "*VirtualBox*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*Wireless*") -and ($_.Description -notlike "*Wi-Fi*")}
+$NetworkConnectionsLAN = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter "IPEnabled=TRUE" | Where-Object {($_.Description -notlike "*Virtual*") -and ($_.Description -notlike "*VPN*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -notlike "*VMware*") -and ($_.Description -notlike "*Wireless*") -and ($_.Description -notlike "*Bluetooth*") -and ($_.Description -notlike "*Wi-Fi*")}
 
 If ($NetworkConnectionsLAN -eq $null)
     {
@@ -90,7 +90,7 @@ ElseIf ($NetworkConnectionsLAN -ne $null)
 function Test-WirelessConnection
 {
 ## Get only wireless connections with IP-address
-$NetworkConnectionsWLAN = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter "IPEnabled=TRUE" | Where-Object {($_.Description -notlike "*VirtualBox*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -notlike "*VMware*") -or ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
+$NetworkConnectionsWLAN = Get-WmiObject -Class Win32_NetworkAdapterConfiguration -Filter "IPEnabled=TRUE" | Where-Object {($_.Description -notlike "*Virtual*") -and ($_.Description -notlike "*VPN*") -and ($_.Description -notlike "*Zscaler*") -and ($_.Description -notlike "*VMware*") -or ($_.Description -like "*Wireless*") -or ($_.Description -like "*Wi-Fi*")}
 
 If ($NetworkConnectionsWLAN -eq $null)
     {
@@ -203,7 +203,7 @@ Write-Output "VersionRegPath: $VersionRegPath"
                     $BalloonTip = $false
                 }
         }
-    ## ≥Windows 8
+    ## â‰¥Windows 8
 
     If ($Win8orGreater)
         {
@@ -279,7 +279,7 @@ Param
     
     ## Remove WLAN Manager Scheduled Task
     Write-Output "Removing WLAN Manager Scheduled Task... "
-    #≥Windows 8
+    #â‰¥Windows 8
     If ($Win8orGreater)
         {
             If ((Get-ScheduledTask -TaskName "$TaskName" -ErrorAction Continue) -ne $null)
