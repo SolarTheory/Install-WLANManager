@@ -203,7 +203,7 @@ Write-Output "VersionRegPath: $VersionRegPath"
                     $BalloonTip = $false
                 }
         }
-    ## â‰¥Windows 8
+    ## ≥Windows 8
 
     If ($Win8orGreater)
         {
@@ -279,7 +279,7 @@ Param
     
     ## Remove WLAN Manager Scheduled Task
     Write-Output "Removing WLAN Manager Scheduled Task... "
-    #â‰¥Windows 8
+    #≥Windows 8
     If ($Win8orGreater)
         {
             If ((Get-ScheduledTask -TaskName "$TaskName" -ErrorAction Continue) -ne $null)
